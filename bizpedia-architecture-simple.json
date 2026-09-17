@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BizPedia MVP — System Architecture",
+    "quality_profile": "showcase",
+    "viewBox": [1000, 700]
+  },
+  "components": [
+    {"id": "user", "type": "external", "label": "사장님", "sublabel": "Browser", "pos": [50, 280], "size": [120, 60]},
+    {"id": "auth", "type": "security", "label": "Kakao", "sublabel": "OAuth", "pos": [50, 100], "size": [120, 60]},
+    {"id": "app", "type": "backend", "label": "Next.js", "sublabel": "Full-stack", "pos": [220, 280], "size": [120, 60]},
+    {"id": "order", "type": "backend", "label": "Order", "sublabel": "발주", "pos": [390, 100], "size": [110, 60]},
+    {"id": "duty", "type": "backend", "label": "Duty", "sublabel": "의무·기한", "pos": [390, 280], "size": [110, 60]},
+    {"id": "search", "type": "backend", "label": "Search", "sublabel": "법령", "pos": [390, 460], "size": [110, 60]},
+    {"id": "llm", "type": "external", "label": "LLM", "sublabel": "OpenAI/Gemini", "pos": [560, 80], "size": [110, 60]},
+    {"id": "db", "type": "database", "label": "PostgreSQL", "sublabel": "+pgvector", "pos": [560, 280], "size": [110, 60]},
+    {"id": "api", "type": "external", "label": "공공API", "sublabel": "기업마당", "pos": [220, 550], "size": [120, 60]},
+    {"id": "aura", "type": "cloud", "label": "AURA", "sublabel": "10월", "pos": [750, 280], "size": [110, 60]}
+  ],
+  "boundaries": [
+    {"kind": "region", "label": "BizPedia (Next.js)", "wraps": ["app", "order", "duty", "search"]},
+    {"kind": "region", "label": "Data (Docker)", "wraps": ["db"]}
+  ],
+  "connections": [
+    {"from": "user", "to": "auth", "label": "login", "variant": "security"},
+    {"from": "auth", "to": "app", "label": "session", "variant": "security"},
+    {"from": "user", "to": "app", "label": "HTTPS", "variant": "emphasis"},
+    {"from": "app", "to": "order", "label": "→"},
+    {"from": "app", "to": "duty", "label": "→"},
+    {"from": "app", "to": "search", "label": "→"},
+    {"from": "order", "to": "llm", "label": "extract"},
+    {"from": "order", "to": "db", "label": "save"},
+    {"from": "duty", "to": "db", "label": "query"},
+    {"from": "duty", "to": "api", "label": "→"},
+    {"from": "search", "to": "db", "label": "vector"},
+    {"from": "app", "to": "db", "label": "queries", "variant": "emphasis"},
+    {"from": "db", "to": "aura", "label": "export", "variant": "dashed"}
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "3층 구조",
+      "items": [
+        "① 1분 진단 → 의무·지원금 발견",
+        "② 습관 → 발주·급여·월 관리",
+        "③ 연결 → 세무사·공공서비스"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "9월 scope",
+      "items": [
+        "Order: 자연어→정형 변환 (LLM)",
+        "Duty: 의무 규칙 기반 기한 자동계산",
+        "Search: 법령 벡터 검색 + 캐시"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Tech Stack",
+      "items": [
+        "Next.js 단일 런타임, Auth.js v5 + 카카오",
+        "PostgreSQL 16 + pgvector (Docker)",
+        "LLM 미정(09-20), 공공API(10월)"
+      ]
+    }
+  ]
+}

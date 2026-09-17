@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BizPedia MVP — System Architecture",
+    "quality_profile": "showcase",
+    "viewBox": [1280, 800]
+  },
+  "components": [
+    {"id": "users", "type": "external", "label": "사장님", "sublabel": "Browser", "pos": [40, 300], "size": [130, 70]},
+    {"id": "kakao", "type": "security", "label": "Kakao OAuth", "pos": [40, 80], "size": [130, 70]},
+    {"id": "nextjs", "type": "backend", "label": "Next.js", "sublabel": "Full-stack", "pos": [220, 300], "size": [140, 70]},
+    {"id": "order", "type": "backend", "label": "Order", "sublabel": "발주", "pos": [420, 100], "size": [130, 70]},
+    {"id": "duty", "type": "backend", "label": "Duty", "sublabel": "의무", "pos": [420, 300], "size": [130, 70]},
+    {"id": "search", "type": "backend", "label": "Search", "sublabel": "검색", "pos": [420, 500], "size": [130, 70]},
+    {"id": "llm", "type": "external", "label": "LLM", "sublabel": "OpenAI", "pos": [650, 60], "size": [130, 70]},
+    {"id": "db", "type": "database", "label": "PostgreSQL", "sublabel": "+pgvector", "pos": [650, 280], "size": [130, 70]},
+    {"id": "law", "type": "database", "label": "law_chunks", "sublabel": "vectors", "pos": [650, 450], "size": [130, 70]},
+    {"id": "api", "type": "external", "label": "APIs", "sublabel": "공공", "pos": [220, 600], "size": [140, 70]},
+    {"id": "aura", "type": "cloud", "label": "AURA", "pos": [880, 300], "size": [130, 70]}
+  ],
+  "boundaries": [
+    {"kind": "region", "label": "BizPedia App", "wraps": ["nextjs", "order", "duty", "search"]},
+    {"kind": "region", "label": "Data (Docker)", "wraps": ["db", "law"]}
+  ],
+  "connections": [
+    {"from": "users", "to": "kakao", "label": "login", "variant": "security", "route": "straight"},
+    {"from": "kakao", "to": "nextjs", "label": "session", "variant": "security", "route": "orthogonal-h", "labelAt": [130, 150]},
+    {"from": "users", "to": "nextjs", "label": "HTTPS", "variant": "emphasis", "route": "straight", "labelAt": [150, 350]},
+    {"from": "nextjs", "to": "order", "route": "orthogonal-h", "labelAt": [320, 120]},
+    {"from": "order", "to": "llm", "label": "extract", "route": "straight"},
+    {"from": "order", "to": "db", "label": "save", "route": "orthogonal-h", "labelAt": [550, 160]},
+    {"from": "nextjs", "to": "duty", "route": "straight", "labelAt": [350, 330]},
+    {"from": "duty", "to": "db", "label": "read", "route": "orthogonal-h", "labelAt": [550, 340]},
+    {"from": "duty", "to": "api", "route": "orthogonal-v", "labelAt": [380, 480]},
+    {"from": "nextjs", "to": "search", "route": "orthogonal-v", "labelAt": [380, 420]},
+    {"from": "search", "to": "law", "label": "vector", "route": "straight"},
+    {"from": "nextjs", "to": "db", "variant": "emphasis", "route": "orthogonal-h", "labelAt": [480, 270]},
+    {"from": "db", "to": "aura", "label": "export", "variant": "dashed", "route": "straight"}
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "3층 구조",
+      "items": [
+        "① 1분 진단: 과세유형·직원수·지역 등",
+        "② 습관: 발주·급여·월 대시보드",
+        "③ 연결: 세무사·지원금"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "9월 scope",
+      "items": [
+        "Order: 자연어→정형, 거래처 매칭",
+        "Duty: 의무 규칙, 기한 자동계산",
+        "Search: 법령 벡터, 캐시, 웹폴백"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "기술",
+      "items": [
+        "Next.js(단일) + Auth.js + 카카오",
+        "PostgreSQL + pgvector (Docker)",
+        "LLM(미정), 공공API(10월)"
+      ]
+    }
+  ]
+}

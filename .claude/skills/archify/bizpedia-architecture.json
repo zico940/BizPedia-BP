@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "BizPedia MVP — System Architecture",
+    "quality_profile": "showcase",
+    "viewBox": [1280, 800],
+    "views": [
+      {
+        "id": "order-path",
+        "label": "Order Request Path",
+        "focus": ["users", "nextjs", "order-service", "llm", "postgres"],
+        "note": "Primary path: natural language order → LLM extraction → structured data → database"
+      },
+      {
+        "id": "compliance-path",
+        "label": "Compliance & Duty Check",
+        "focus": ["users", "nextjs", "duty-service", "postgres", "public-api"],
+        "note": "Diagnosis → duty rules → user obligations checklist → public service links"
+      },
+      {
+        "id": "search-and-knowledge",
+        "label": "Law Search & Knowledge",
+        "focus": ["users", "nextjs", "search-service", "law-chunks", "qa-cache"],
+        "note": "Vector search, QA cache, web fallback for compliance answers"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "users",
+      "type": "external",
+      "label": "사장님 / 예비창업자",
+      "sublabel": "Browser / Mobile",
+      "pos": [40, 350],
+      "size": [140, 70],
+      "tag": "Safari, Chrome"
+    },
+    {
+      "id": "kakao-auth",
+      "type": "security",
+      "label": "Kakao OAuth",
+      "sublabel": "카카오 로그인",
+      "pos": [40, 120],
+      "size": [140, 70],
+      "tag": "Auth.js v5"
+    },
+    {
+      "id": "nextjs",
+      "type": "backend",
+      "label": "Next.js",
+      "sublabel": "Frontend + Backend",
+      "pos": [280, 350],
+      "size": [160, 70],
+      "tag": "Single runtime"
+    },
+    {
+      "id": "order-service",
+      "type": "backend",
+      "label": "Order Domain",
+      "sublabel": "발주 변환·매칭",
+      "pos": [520, 250],
+      "size": [160, 70],
+      "tag": "Vendor match, regex"
+    },
+    {
+      "id": "duty-service",
+      "type": "backend",
+      "label": "Duty Service",
+      "sublabel": "의무·기한 판정",
+      "pos": [520, 450],
+      "size": [160, 70],
+      "tag": "Whitelist rules"
+    },
+    {
+      "id": "search-service",
+      "type": "backend",
+      "label": "Search & QA",
+      "sublabel": "법령·지식 검색",
+      "pos": [280, 550],
+      "size": [160, 70],
+      "tag": "Vector + cache"
+    },
+    {
+      "id": "llm",
+      "type": "external",
+      "label": "LLM Provider",
+      "sublabel": "OpenAI / Gemini",
+      "pos": [760, 180],
+      "size": [160, 70],
+      "tag": "미정 (09-20)"
+    },
+    {
+      "id": "postgres",
+      "type": "database",
+      "label": "PostgreSQL 16",
+      "sublabel": "app data + pgvector",
+      "pos": [760, 350],
+      "size": [160, 70],
+      "tag": "Docker, :5432"
+    },
+    {
+      "id": "law-chunks",
+      "type": "database",
+      "label": "Law Chunks",
+      "sublabel": "법령 벡터 임베딩",
+      "pos": [760, 470],
+      "size": [160, 70],
+      "tag": "pgvector"
+    },
+    {
+      "id": "qa-cache",
+      "type": "database",
+      "label": "QA Cache",
+      "sublabel": "질문 결과 캐시",
+      "pos": [520, 600],
+      "size": [160, 70],
+      "tag": "문제 해시"
+    },
+    {
+      "id": "public-api",
+      "type": "external",
+      "label": "Public APIs",
+      "sublabel": "기업마당·보조금24·천문연",
+      "pos": [280, 700],
+      "size": [160, 70],
+      "tag": "Gov + open data"
+    },
+    {
+      "id": "aura",
+      "type": "external",
+      "label": "AURA 통합",
+      "sublabel": "10월 대시보드",
+      "pos": [1000, 350],
+      "size": [160, 70],
+      "tag": "JSON export"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "BizPedia Application",
+      "wraps": ["nextjs", "order-service", "duty-service", "search-service"]
+    },
+    {
+      "kind": "region",
+      "label": "Data Layer (Docker)",
+      "wraps": ["postgres", "law-chunks", "qa-cache"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Session & Personal Data",
+      "wraps": ["postgres"],
+      "variant": "security"
+    }
+  ],
+  "connections": [
+    {
+      "id": "user-login",
+      "from": "users",
+      "to": "kakao-auth",
+      "label": "로그인 요청",
+      "variant": "security",
+      "fromSide": "left",
+      "toSide": "bottom"
+    },
+    {
+      "id": "user-app",
+      "from": "users",
+      "to": "nextjs",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "auth-verify",
+      "from": "kakao-auth",
+      "to": "nextjs",
+      "label": "token → session",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "top"
+    },
+    {
+      "id": "order-llm",
+      "from": "order-service",
+      "to": "llm",
+      "label": "자연어 → JSON",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "order-db",
+      "from": "order-service",
+      "to": "postgres",
+      "label": "INSERT orders"
+    },
+    {
+      "id": "duty-rules",
+      "from": "duty-service",
+      "to": "postgres",
+      "label": "SELECT + INSERT duties",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "duty-api",
+      "from": "duty-service",
+      "to": "public-api",
+      "label": "지원금·기한 API",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "variant": "dashed"
+    },
+    {
+      "id": "search-vector",
+      "from": "search-service",
+      "to": "law-chunks",
+      "label": "pgvector 검색",
+      "fromSide": "right",
+      "toSide": "bottom"
+    },
+    {
+      "id": "search-cache",
+      "from": "search-service",
+      "to": "qa-cache",
+      "label": "캐시 hit/miss",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "app-order",
+      "from": "nextjs",
+      "to": "order-service",
+      "label": "POST /order"
+    },
+    {
+      "id": "app-duty",
+      "from": "nextjs",
+      "to": "duty-service",
+      "label": "GET /duties"
+    },
+    {
+      "id": "app-search",
+      "from": "nextjs",
+      "to": "search-service",
+      "label": "POST /search"
+    },
+    {
+      "id": "app-db",
+      "from": "nextjs",
+      "to": "postgres",
+      "label": "lib/db/queries.ts",
+      "variant": "emphasis"
+    },
+    {
+      "id": "export-aura",
+      "from": "postgres",
+      "to": "aura",
+      "label": "JSON 어댑터",
+      "variant": "dashed",
+      "fromSide": "right",
+      "toSide": "left"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "blue",
+      "title": "Core Domains",
+      "items": [
+        "Order: 자연어 발주 → 정형 데이터, 거래처 매칭, 카톡 공유",
+        "Duty: 진단 기반 의무 판정, 기한 자동 계산, 체크리스트",
+        "Search: 법령 벡터 검색, QA 캐시, 웹 폴백"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Data & Security",
+      "items": [
+        "PostgreSQL 16 + pgvector: 단일 DB, 모든 데이터 함께",
+        "Auth.js(v5) + 카카오: 세션 기반, PG adapter",
+        "개인정보 격리: where user_id = $세션유저 (모든 쿼리)"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "External & 미정",
+      "items": [
+        "LLM: OpenAI/Gemini (09-20 결정 필수)",
+        "공공 API: 기업마당·천문연·보조금24 (10월)",
+        "AURA 통합: JSON 출력, 10월 대시보드 연동"
+      ]
+    }
+  ]
+}

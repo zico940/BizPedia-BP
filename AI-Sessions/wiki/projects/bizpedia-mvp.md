@@ -121,6 +121,7 @@ Docker 데몬은 미기동 상태다. 사용자가 Docker Desktop을 직접 실�
 
 | 문서 | 내용 | 시기 |
 |---|---|---|
+| [[architecture-overview]] | 팀 공유용 아키텍처 정의서 (비개발 직군용 요약, 전원 합의 전 초안) | 팀 검토용 |
 | [[database-design]] | 테이블 9개 + Auth.js 4개, 마이그레이션 2본 | 9월 |
 | [[auth-design]] | 카카오 로그인, 비즈앱 이중 대응, 가입 폼 | 9월 |
 | [[order-design]] | **발주 도메인 — 9월의 핵심** | 9월 |
@@ -165,6 +166,7 @@ Docker 데몬은 미기동 상태다. 사용자가 Docker Desktop을 직접 실�
 
 ## Links
 
+- [[architecture-overview]]
 - [[tech-stack-selection]]
 - [[data-isolation-policy]]
 - [[dev-workflow]]

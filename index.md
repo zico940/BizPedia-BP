@@ -51,6 +51,7 @@
 
 ## Design
 
+- [[architecture-overview]] — 팀 공유용 아키텍처 정의서(비개발 직군용 요약, 전원 합의 전 초안)
 - [[database-design]] — 테이블 9개 + Auth.js 4개, 마이그레이션 2본
 - [[auth-design]] — 카카오 로그인, 비즈앱 이중 대응, 가입 폼
 - [[order-design]] — **발주 도메인 (9월의 핵심)**: 변환·매칭·재사용·승인
