@@ -4,10 +4,7 @@
 # OS / 편집기 메타데이터
 .DS_Store
 Thumbs.db
-.obsidian/workspace
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-.obsidian/cache
+.obsidian/
 
 # Python
 __pycache__/

@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "eli5": {
+      "source": "dreambigou/eli5",
+      "sourceType": "github",
+      "skillPath": "skills/eli5/SKILL.md",
+      "computedHash": "a34b7ba8a192ad270fc3deac1981688948ee61ba30253c01b4b4828d06ae40f5"
+    }
+  }
+}

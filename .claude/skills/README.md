@@ -29,6 +29,7 @@
 | taste-skill | 미설치 | 화면·UI 품질 개선("anti-slop" 프론트엔드). 구현용 스킬 + 레퍼런스 이미지 생성 스킬 묶음. DESIGN_VARIANCE / MOTION_INTENSITY / VISUAL_DENSITY 조절 | `npx skills add https://github.com/Leonxlnx/taste-skill` (특정 변형은 `--skill "design-taste-frontend"` 식) | https://github.com/Leonxlnx/taste-skill | frontend |
 | superpowers | 미설치 | 설계 → 계획 → 구현 → 테스트 → 리뷰 전 과정 방법론. TDD·체계적 디버깅·브레인스토밍·계획 작성 스킬 포함 | `/plugin marketplace add obra/superpowers-marketplace` → `/plugin install superpowers@superpowers-marketplace` (또는 공식: `/plugin install superpowers@claude-plugins-official`) | https://github.com/obra/superpowers | backend, frontend, database, code-review |
 | ponytail | 미설치 | 과설계 방지, 최소 구현 강제. 코드 작성 전 "이게 필요한가 → 기존 코드 → stdlib → 네이티브 → 설치된 의존성 → 한 줄 → 최소 구현" 사다리를 태움. `/ponytail-review`, `/ponytail ultra` 등 명령 제공 | `/plugin marketplace add DietrichGebert/ponytail` → `/plugin install ponytail@ponytail` (두 명령을 각각 따로 실행해야 설치됨) | https://github.com/dietrichgebert/ponytail | 전원 |
+| eli5 | 설치됨 | 복잡한 개념을 간단하게 설명 | `npx skills add dreambigou/eli5` | https://github.com/dreambigou/eli5 | 메인 세션 |
 | claude-skills | 미설치 (참조용) | 여러 스킬을 담은 패키지 레포. `skill-finder` 스킬 포함(claude-plugins.dev 레지스트리에서 스킬을 찾아 설치·생성). 이 프로젝트에 필요한 개별 스킬을 여기서 골라 설치하는 용도 | `npx skills add ckorhonen/claude-skills` (개별: `--skill <이름>`) | https://github.com/ckorhonen/claude-skills | (필요 시 지정) |
 
 - **상태**: `설치됨` / `미설치` / `미설치 (참조용)` — 참조용은 자체를 스킬로 쓰기보다 여기서 개별 스킬을 골라 받는 소스
